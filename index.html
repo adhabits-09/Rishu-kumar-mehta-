@@ -435,6 +435,72 @@
       font-weight: 600;
     }
 
+    /* ── SHORTS FEEDBACK SECTION ── */
+    .shorts-feedback-wrapper {
+      position: relative;
+      padding: 0 50px;
+    }
+    .shorts-viewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin: 1.5rem 0;
+      padding-bottom: 15px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) var(--ink);
+    }
+    .shorts-viewport::-webkit-scrollbar { height: 8px; }
+    .shorts-viewport::-webkit-scrollbar-track { background: var(--ink); border-radius: 4px; }
+    .shorts-viewport::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+    .shorts-viewport::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
+    .shorts-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+    }
+    .shorts-item {
+      flex-shrink: 0;
+      width: 315px;
+      height: 560px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--gold-line);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      background: #000;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .shorts-item:hover { transform: scale(1.02); border-color: var(--gold); box-shadow: 0 16px 38px rgba(201,168,76,0.18); }
+    .shorts-item iframe { width: 100%; height: 100%; border: none; }
+    .scroll-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 45px;
+      height: 45px;
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      transition: all 0.3s ease;
+      color: var(--gold);
+    }
+    .scroll-arrow:hover { background: var(--gold); color: var(--ink); transform: translateY(-50%) scale(1.1); }
+    .scroll-arrow.prev { left: 0; }
+    .scroll-arrow.next { right: 0; }
+    .scroll-arrow.hidden { display: none; }
+    @media (max-width: 768px) {
+      .shorts-feedback-wrapper { padding: 0 10px; }
+      .scroll-arrow { display: none; }
+      .shorts-item { width: 260px; height: 460px; }
+    }
+
     /* ── STEPS ── */
     .steps-section {
       background: var(--ink);
@@ -998,6 +1064,55 @@
   </div>
 </section>
 
+<!-- FEEDBACK (YOUTUBE SHORTS) -->
+<section class="coach-section" id="feedback">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="section-eyebrow">Hear From Them</span>
+      <h2 class="section-title" style="color:var(--white);">Real Success Stories</h2>
+      <div class="gold-rule"></div>
+      <p class="mt-2" style="color:var(--muted); max-width:500px; margin:10px auto 0; font-size:0.82rem;">Drag or use arrows to explore student testimonials</p>
+    </div>
+
+    <div class="shorts-feedback-wrapper">
+      <button class="scroll-arrow prev" id="scrollLeft" aria-label="Scroll Left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+
+      <div class="shorts-viewport" id="feedbackViewport">
+        <div class="shorts-track" id="feedbackTrack">
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/NmOIaWC9cM0" title="Success Story 1" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/o422iGCqoNk" title="Success Story 2" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/O-3aVkrt5Sw" title="Success Story 3" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/Yj1jLWMiasY" title="Success Story 4" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/h9NeRaOz7rw" title="Success Story 5" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="shorts-item">
+            <iframe src="https://www.youtube.com/embed/EPSfYpv_ZVE" title="Success Story 6" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <button class="scroll-arrow next" id="scrollRight" aria-label="Scroll Right">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="text-center mt-3">
+      <small style="color:var(--muted);">💡 Tip: You can also drag horizontally to scroll</small>
+    </div>
+  </div>
+</section>
+
 <!-- STEPS -->
 <section class="steps-section" id="steps">
   <div class="container position-relative" style="z-index:1;">
@@ -1404,6 +1519,34 @@
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
+
+  // Shorts feedback carousel scroll logic
+  const feedbackViewport = document.getElementById('feedbackViewport');
+  const scrollLeftBtn = document.getElementById('scrollLeft');
+  const scrollRightBtn = document.getElementById('scrollRight');
+  const shortsScrollAmount = 335;
+
+  if (feedbackViewport && scrollLeftBtn && scrollRightBtn) {
+    scrollLeftBtn.addEventListener('click', () => {
+      feedbackViewport.scrollBy({ left: -shortsScrollAmount, behavior: 'smooth' });
+    });
+    scrollRightBtn.addEventListener('click', () => {
+      feedbackViewport.scrollBy({ left: shortsScrollAmount, behavior: 'smooth' });
+    });
+
+    function updateShortsArrowVisibility() {
+      const maxScroll = feedbackViewport.scrollWidth - feedbackViewport.clientWidth;
+      if (feedbackViewport.scrollLeft <= 0) { scrollLeftBtn.classList.add('hidden'); }
+      else { scrollLeftBtn.classList.remove('hidden'); }
+
+      if (feedbackViewport.scrollLeft >= maxScroll - 5) { scrollRightBtn.classList.add('hidden'); }
+      else { scrollRightBtn.classList.remove('hidden'); }
+    }
+
+    feedbackViewport.addEventListener('scroll', updateShortsArrowVisibility);
+    window.addEventListener('resize', updateShortsArrowVisibility);
+    updateShortsArrowVisibility();
+  }
 
   // Popup logic
   const formBackdrop  = document.getElementById('formBackdrop');
